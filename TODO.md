@@ -1,0 +1,39 @@
+# APEX — product outcomes
+
+APEX is an **open-source, local-first agent workstation** with its own shared agent engine across CLI, dashboard, and API. Its broader product target is to bring together the useful capabilities users value in Manus/Desktop/Cue, Kimi Work/Desktop, Hermes Desktop, OpenClaw, Meta Muse, OpenAI Dots, Grok agents, and other systems, plus beneficial features APEX creates itself. Build these as independently real capabilities; do not imply literal feature parity, undocumented integrations, or completion of roadmap work.
+
+## Product outcomes
+
+- [ ] **Product, docs, and public source foundation** — Name the project APEX; record the owner-selected MIT License; present a real architecture, setup instructions, supported capabilities, limitations, security policy, contribution guidance, research, and roadmap. Create the requested GitHub source repository using the supported handoff and complete publication visibility through the authorized user-controlled path.
+
+- [ ] **Broad agent-workstation capability target** — APEX must be an agent in its own right, not a chatbot shell, agent directory, or dependent wrapper. The product goal covers coding, local files, browser/computer use, web research, documents, app integrations, persistent memory, automation, messaging, and specialist workflows. Present only working capabilities as available; label each not-yet-built capability as roadmap work and use vendor products as design references rather than assuming their private APIs are available.
+
+- [ ] **Shared agent engine and model selection** — Provide real remote model API, compatible server API, and reachable local-model configurations. The dashboard/API and remote CLI must share a policy/run engine; converge local CLI and a future local dashboard on the same capability, consent, and trace contract without implying identical execution environments. Encrypt user API credentials server-side. Require a successful live model check before a profile is the default. Do not silently use xAI, OpenAI, or another hosted provider.
+
+- [ ] **CLI agent** — Provide real remote run, persistent chat, status, history, Skills, Plugin listing, token login/logout, and local-project modes. Remote mode must call the same run engine and trace as the dashboard. Local mode must scope file operations to `--cwd`, exclude common secrets/dependencies, reject symlinks, require per-write confirmation unless explicitly bypassed, keep shell opt-in, and confirm each exact command.
+
+- [ ] **Local-first onboarding without provider keys** — A user must be able to use APEX's local CLI without an APEX server account, hosted-model account, or provider API key. `apex setup` must detect Ollama or direct the user to install it, find or offer a tool-capable local model, disclose the download size, ask before downloading, save local configuration with user-only permissions, and explain when setup is complete. The current CLI offers `qwen3.5:4b` only after disclosing its approximate 3.3–4.0 GB download and asking for confirmation. This currently sets up CLI mode only, not a browser dashboard. A standalone npm package and native desktop installer remain separate deliverables.
+
+- [ ] **Local daemon, dashboard, and native desktop/computer use** — The target includes a local service that exposes the APEX dashboard/API to a user's Ollama and authorized project, followed by a convenient desktop application with project-aware work, scoped local files/apps, browser/computer tasks, and shared sessions/traces across CLI, dashboard, and desktop. Do not claim these are available until APEX has the local daemon, native desktop client, and a genuinely isolated, interruptible runner with separate folder, process, browser/network, credential, and side-effect grants; user-visible plans; action-specific approval; and execution receipts. A confirmation dialog alone is not a sandbox. Make local-workstation versus isolated-cloud execution visible.
+
+- [ ] **Web dashboard and API surfaces** — Keep the authenticated dashboard and personal-token API usable as first-party surfaces of the same APEX run engine; expose truthful provider, CLI token, Skill, Plugin, workflow, history, memory, workspace, and security state.
+
+- [ ] **APEX's own loop, tools, and private context** — Persist user tasks, messages, real model calls, bounded tool results, session-owned memory, versioned virtual workspace files, run states, and actual execution traces. Support owner-scoped inspection and deletion; keep prompt-injected external/tool content untrusted.
+
+- [ ] **User-owned Skills** — Support versioned instruction bundles that affect the actual APEX prompt only when enabled. Limit simultaneous Skills and forbid Skills from silently adding tools or permissions. Include a mock-interview practice Skill that helps users express their own real experience. Live assistance must be disclosed/permitted; no covert answer feed, candidate impersonation, or fabricated credentials.
+
+- [ ] **Bounded API Plugins** — Support user-configured, fixed-path read-only JSON GET endpoints. Live-test before enabling, encrypt API keys, enforce strict query/response limits, block private networks/redirects by default, and ask for separate per-run permission before external data egress.
+
+- [ ] **Optional agent bridges** — Keep APEX capable without external agents, but allow verified peers to be connected and delegated to under explicit run consent, data-boundary notice, scoped credentials, and durable trace. A generic APEX Bridge v1 is not a claim of native connection to Grok Build, Cue, OpenClaw, Hermes, Kimi Work, Meta Muse, or OpenAI Dots. Keep Meta Muse and OpenAI Dots distinct; build a named adapter only if its public control protocol is documented and actually implemented.
+
+- [ ] **Automations** — Save validated drafts and permit real manual Run once execution. Do not label schedule/webhook triggers active until a restart-safe authenticated worker has been configured and verified. Add durable idempotency, retry/backoff, cancellation, approval waits, missed-run policy, and event receipts before unattended use.
+
+- [ ] **Human approvals and effect ledger** — Persist actual approval requests, exact action arguments, decisions, expiry, and pause/resume. Keep attempted, confirmed, and externally verified effects distinct. Do not claim a consequential side effect succeeded from model text alone.
+
+- [ ] **Security and run isolation** — Provide truthful safety controls and threat model. Treat UI and CLI confirmation as a guardrail, not a sandbox. Implement and test an OS/container-isolated runner with resource, filesystem, secret, and network controls before enabling untrusted-code execution or public multi-user access.
+
+- [ ] **Evidence-backed product strategy** — Use `docs/agent-landscape.md`, `docs/desktop-agent-review.md`, and the commissioned `docs/product-ideas/` reports to prioritize capabilities that close observed gaps: portable context, explicit policy/effects, reliable automation, useful local workflows, desktop/browser coverage, extensions, privacy, and beneficial interview coaching. Preserve citations and distinguish evidence from APEX recommendations.
+
+## Deployment boundary
+
+The hosted Preview uses Manus OAuth and managed MySQL; standalone self-host authentication and a durable production scheduler are not yet complete. Local Ollama use needs no provider key, but the user must install Ollama; a published npm package and native desktop installer are not ready. API keys cannot be stored until the operator configures the 32-byte `APEX_ENCRYPTION_KEY`. A cloud Preview cannot access the user's desktop `localhost`. APEX local CLI's optional shell runs as the OS user and is not sandboxed. Do not advertise production-grade isolation or unattended consequential automation before the missing workers and controls exist.

@@ -8,6 +8,27 @@
       "when": 1788785580464,
       "tag": "0000_initial_users",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1791906970008,
+      "tag": "0001_famous_silver_sable",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1791908471505,
+      "tag": "0002_rich_albert_cleary",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1791910036788,
+      "tag": "0003_quiet_kang",
+      "breakpoints": true
     }
   ]
 }

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title id="title">APEX converging-lanes mark</title>
+  <rect width="512" height="512" rx="112" fill="#171b17"/>
+  <path d="M104 390 225 103c12-28 51-28 63 0l120 287" fill="none" stroke="#c9fa61" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  <path d="M165 270h182M190 210h132M210 150h92" fill="none" stroke="#f2f4eb" stroke-linecap="round" stroke-width="22"/>
+  <circle cx="256" cy="390" r="17" fill="#f2f4eb"/>
+</svg>

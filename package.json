@@ -1,10 +1,15 @@
 {
-  "name": "agenthub",
+  "name": "apex-agent",
   "version": "1.0.0",
-  "type": "module",
   "license": "MIT",
+  "type": "module",
+  "bin": {
+    "apex": "./bin/apex.mjs"
+  },
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
+    "cli": "node bin/apex.mjs",
+    "hash-password": "node bin/hash-password.mjs",
     "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
     "check": "tsc --noEmit",
