@@ -5,8 +5,13 @@ import {
   Check,
   Code2,
   Database,
+  Film,
+  Gamepad2,
   GitBranch,
+  Globe,
+  History,
   LockKeyhole,
+  Search,
   ShieldCheck,
   Sparkles,
   Workflow,
@@ -15,45 +20,66 @@ import {
 const capabilities = [
   {
     icon: Sparkles,
-    title: "One independent agent",
+    title: "APEX is its own agent",
     detail:
-      "APEX works on its own; real model calls, tool results, and run traces stay distinguishable.",
-  },
-  {
-    icon: Code2,
-    title: "Local-first CLI",
-    detail:
-      "Start with Ollama on this computer. Local CLI use needs no provider API key or hosted APEX server.",
+      "Local CLI and desktop runs use APEX's local task loop. The hosted dashboard and remote API are a separate deployment.",
+    state: "AVAILABLE",
   },
   {
     icon: Database,
-    title: "Dashboard + API",
+    title: "Your model choice",
     detail:
-      "Use the same APEX engine through the workbench or a programmatic client.",
+      "Use Ollama without a provider key, or configure a compatible cloud model API directly with your own credentials.",
+    state: "AVAILABLE",
+  },
+  {
+    icon: Code2,
+    title: "Project work",
+    detail:
+      "Local text-file tools stay inside the selected project. Proposed file writes show their complete content for approval.",
+    state: "LIMITED",
+  },
+  {
+    icon: Gamepad2,
+    title: "Create Game",
+    detail:
+      "A dedicated game-building area is planned. This preview does not generate game code, assets, or a live game.",
+    state: "PLANNED",
+  },
+  {
+    icon: Film,
+    title: "Create Video",
+    detail:
+      "A video studio is planned. Video generation, editing, and rendering are not implemented in this build.",
+    state: "PLANNED",
+  },
+  {
+    icon: Globe,
+    title: "Browser & Research",
+    detail:
+      "General browser/computer control and live sourced research remain roadmap work; no websites are operated from this tour.",
+    state: "PLANNED",
+  },
+  {
+    icon: History,
+    title: "Run traces",
+    detail:
+      "The local dashboard stores recent run events and exposes actual statuses, tool steps, and file approvals.",
+    state: "AVAILABLE",
   },
   {
     icon: BookOpen,
-    title: "Skills and bounded plugins",
+    title: "Skills and integrations",
     detail:
-      "Reusable instructions and read-only data sources do not silently add permissions.",
+      "Markdown Skills are supported in the CLI; hosted API Plugins and optional bridges are separate from the local desktop.",
+    state: "LIMITED",
   },
   {
     icon: Workflow,
-    title: "Workflows, built carefully",
+    title: "Automations",
     detail:
-      "Workflow drafts and manual Run once work today; durable unattended schedules are not active yet.",
-  },
-  {
-    icon: GitBranch,
-    title: "Optional bridges",
-    detail:
-      "Delegate only to a real configured peer, after you opt in for that run.",
-  },
-  {
-    icon: LockKeyhole,
-    title: "Desktop control on the roadmap",
-    detail:
-      "Full browser and computer-use features require an isolated runner and are not enabled in this preview.",
+      "Local scheduled jobs and restart-safe triggers are planned. The local desktop does not run unattended schedules.",
+    state: "PLANNED",
   },
 ];
 
@@ -69,121 +95,187 @@ export default function Preview() {
           </span>
           <span>
             <b>APEX</b>
-            <small>AGENT WORKBENCH</small>
+            <small>LOCAL AGENT WORKSTATION</small>
           </span>
         </a>
-        <a className="button button-secondary" href="/">
-          Sign in <ArrowUpRight size={15} />
+        <a
+          className="preview-signin"
+          href="/"
+          aria-label="Open hosted APEX workspace"
+        >
+          Hosted workspace <ArrowUpRight size={15} />
         </a>
       </header>
 
       <section className="preview-hero">
-        <div>
-          <div className="eyebrow">LOCAL-FIRST AGENT WORKSTATION</div>
+        <div className="preview-hero-copy">
+          <div className="preview-eyebrow">
+            <span /> OPEN-SOURCE · LOCAL-FIRST · MIT
+          </div>
           <h1>
             Your agent.
             <br />
-            <em>Your control.</em>
+            <em>Your machine.</em>
           </h1>
           <p>
-            APEX is an open-source agent with a local-first CLI. Its hosted
-            dashboard, API, and remote CLI share a server engine; local CLI mode
-            currently runs a separate bounded loop. Start with Ollama; choose a
-            hosted backend only if you want one. Native desktop and full
-            computer-use controls are still roadmap work, not hidden features in
-            this preview.
+            APEX is a standalone agent workstation—not just a chatbot or a list
+            of integrations. Run it locally, choose Ollama or a cloud model API,
+            and see what is actually implemented before you grant more access.
           </p>
-          <a className="button button-primary button-large" href="/">
-            Open the private workspace <ArrowRight size={16} />
-          </a>
+          <div className="preview-hero-actions">
+            <a className="preview-primary-cta" href="#work-areas">
+              Explore work areas <ArrowRight size={16} />
+            </a>
+            <a className="preview-secondary-cta" href="/">
+              Open hosted dashboard
+            </a>
+          </div>
           <div className="preview-hero-note">
-            <LockKeyhole size={13} /> This public page loads no account data or
-            provider credentials.
+            <LockKeyhole size={14} /> This public tour is read-only; it does not
+            load account data, run a task, or contact a model provider.
           </div>
         </div>
-        <div
-          className="preview-surface"
-          aria-label="Read-only workspace preview"
-        >
-          <div className="preview-surface-bar">
-            <span className="apex-mini-mark">
-              <i />
-              <i />
-              <i />
-            </span>
-            <span>APEX / AGENT</span>
-            <span className="preview-readonly">
-              <ShieldCheck size={12} /> READ-ONLY
-            </span>
-          </div>
-          <div className="preview-surface-body">
-            <aside className="preview-rail" aria-hidden="true">
-              <span className="preview-rail-active">
-                <Sparkles size={15} /> Agent
+
+        <div className="preview-device-wrap">
+          <div
+            className="preview-surface"
+            aria-label="Read-only preview of the APEX desktop work areas"
+          >
+            <div className="preview-surface-bar">
+              <span className="apex-mini-mark" aria-hidden="true">
+                <i />
+                <i />
+                <i />
               </span>
-              <span>
-                <Database size={15} /> Workspace
+              <span>APEX / LOCAL WORKSPACE</span>
+              <span className="preview-readonly">
+                <ShieldCheck size={12} /> READ-ONLY
               </span>
-              <span>
-                <Workflow size={15} /> Automations
-              </span>
-              <span>
-                <GitBranch size={15} /> Bridges
-              </span>
-            </aside>
-            <div className="preview-workspace">
-              <div className="eyebrow">AGENT WORKSPACE</div>
-              <h2>What should APEX work on?</h2>
-              <p>
-                Describe a goal. APEX will use only the model and tools you
-                configure.
-              </p>
-              <div className="preview-empty-composer">
-                <span>
-                  Set up Ollama or choose a model to start a private run…
-                </span>
-                <span className="preview-send" aria-hidden="true">
-                  <ArrowRight size={15} />
-                </span>
-              </div>
-              <div className="preview-state-row">
-                <span>
-                  <i /> No account data loaded
+            </div>
+            <div className="preview-surface-body">
+              <aside className="preview-rail" aria-label="APEX work areas">
+                <div className="preview-rail-label">WORK AREAS</div>
+                <span className="preview-rail-active">
+                  <Sparkles size={13} /> <b>Agent</b>
+                  <small>READY</small>
                 </span>
                 <span>
-                  <i /> No example runs shown
+                  <Code2 size={13} /> <b>Code & Files</b>
+                  <small>LIMITED</small>
                 </span>
-              </div>
-              <div className="preview-live-boundary">
-                <Check size={15} />
                 <span>
-                  <b>Honest by default.</b> This interface tour contains no
-                  fabricated agents, metrics, or connection states.
+                  <Gamepad2 size={13} /> <b>Create Game</b>
+                  <small>PLANNED</small>
                 </span>
+                <span>
+                  <Film size={13} /> <b>Create Video</b>
+                  <small>PLANNED</small>
+                </span>
+                <span>
+                  <Globe size={13} /> <b>Browser & Computer</b>
+                  <small>PLANNED</small>
+                </span>
+                <span>
+                  <Search size={13} /> <b>Research</b>
+                  <small>PLANNED</small>
+                </span>
+                <div className="preview-rail-label preview-rail-spaced">
+                  SYSTEM
+                </div>
+                <span>
+                  <BookOpen size={13} /> <b>Skills</b>
+                  <small>CLI ONLY</small>
+                </span>
+                <span>
+                  <Workflow size={13} /> <b>Automations</b>
+                  <small>PLANNED</small>
+                </span>
+                <span>
+                  <History size={13} /> <b>Run History</b>
+                  <small>READY</small>
+                </span>
+              </aside>
+
+              <div className="preview-workspace">
+                <div className="preview-workspace-top">
+                  <span className="preview-workspace-kicker">LOCAL AGENT</span>
+                  <span className="preview-live-status">
+                    <i /> READY FOR SETUP
+                  </span>
+                </div>
+                <h2>What should APEX work on?</h2>
+                <p>
+                  Choose a model, select a project folder, then give APEX a
+                  specific task.
+                </p>
+                <div className="preview-model-row">
+                  <span className="preview-model-icon">
+                    <Database size={13} />
+                  </span>
+                  <span>
+                    <b>Model backend</b>
+                    <small>Ollama or a user-configured API</small>
+                  </span>
+                  <span className="preview-not-set">NOT SET</span>
+                </div>
+                <div className="preview-empty-composer">
+                  <span>Set up a model to start a local task…</span>
+                  <span className="preview-send" aria-hidden="true">
+                    <ArrowRight size={15} />
+                  </span>
+                </div>
+                <div className="preview-state-row">
+                  <span>
+                    <i /> No example runs
+                  </span>
+                  <span>
+                    <i /> No account data
+                  </span>
+                </div>
+                <div className="preview-live-boundary">
+                  <Check size={14} />
+                  <span>
+                    <b>Visible boundaries.</b> Planned areas stay labeled until
+                    their real tools exist.
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+          <div className="preview-device-caption">
+            <span>01 / LOCAL WORKSTATION</span>
+            <span>REAL UI · NO SAMPLE RUNS</span>
           </div>
         </div>
       </section>
 
-      <section className="preview-capabilities">
+      <section className="preview-capabilities" id="work-areas">
         <div className="preview-section-heading">
-          <div className="eyebrow">WHAT APEX BRINGS TOGETHER</div>
-          <h2>One agent. Several ways to use it.</h2>
+          <div className="preview-eyebrow">
+            <span /> THE WORKSTATION MAP
+          </div>
+          <h2>Many work areas. One honest status for each.</h2>
           <p>
-            Start locally with Ollama. Add a hosted model or a real peer only
-            when you choose; desktop control and unattended scheduling are still
-            being built.
+            Create Game and Create Video are visible as planned sections—not
+            pretend generators. APEX adds their real capabilities as they are
+            built and verified.
           </p>
         </div>
         <div className="preview-capability-list">
-          {capabilities.map(({ icon: Icon, title, detail }) => (
+          {capabilities.map(({ icon: Icon, title, detail, state }) => (
             <article className="preview-capability" key={title}>
               <span className="preview-capability-icon">
                 <Icon size={17} />
               </span>
-              <div>
-                <h3>{title}</h3>
+              <div className="preview-capability-copy">
+                <div className="preview-capability-title">
+                  <h3>{title}</h3>
+                  <span
+                    className={`preview-state-pill state-${state.toLowerCase()}`}
+                  >
+                    {state}
+                  </span>
+                </div>
                 <p>{detail}</p>
               </div>
             </article>
@@ -194,7 +286,7 @@ export default function Preview() {
       <footer className="public-preview-footer">
         <span>APEX · MIT-licensed agent workstation</span>
         <a href="/">
-          Sign in to manage your own workspace <ArrowRight size={14} />
+          Open the workspace <ArrowRight size={14} />
         </a>
       </footer>
     </main>

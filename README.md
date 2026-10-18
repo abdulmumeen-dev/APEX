@@ -1,8 +1,8 @@
 # APEX
 
-**One agent. One engine. Every surface.**
+**One agent. Your model. Your machine.**
 
-APEX is an open-source, local-first agent workstation. It is an agent in its own right—not a chatbot shell or an agent directory—with a CLI, dashboard, and API. The hosted dashboard/API and remote CLI currently share the server agent loop; local CLI mode runs a separate bounded local loop. A common local daemon, native desktop client, and full browser/computer operation are part of the goal, but are not yet delivered.
+APEX is an open-source, standalone, local-first agent workstation. Its local CLI and desktop dashboard use a local execution loop and need neither an APEX-hosted service nor an APEX account. Choose local Ollama (no provider key) or configure a cloud model API directly with your own provider key. The hosted dashboard and remote CLI remain a separate optional deployment with their existing server-side loop.
 
 Start locally with Ollama and a compatible model; local CLI use needs no APEX server, hosted-model account, or API key. Hosted APIs and compatible servers are optional. Optional agent bridges are separate from model providers, and APEX works without bridges.
 
@@ -19,18 +19,19 @@ Start locally with Ollama and a compatible model; local CLI use needs no APEX se
 - User-configured, read-only JSON API Plugins. The endpoint is fixed and live-tested before enabling; use is separately authorized for each task; private-network addresses and redirects are blocked by default.
 - Real memory and versioned virtual workspace-file tools, workflow drafts, and manual **Run once** for a saved workflow.
 - Optional, generic authenticated APEX Bridge v1 peers. Delegation is off by default and task context is shared only for an explicitly permitted run.
+- A standalone loopback local dashboard and Electron shell. Local CLI and desktop runs share one local task loop, with model setup, run traces, exact file-write approvals, and labeled work areas. A Linux AppImage has been generated and smoke-opened through its workspace chooser and main window under Xvfb; it remains an unsigned development artifact.
 
-The project also includes a source-backed [agent landscape review](docs/agent-landscape.md), [desktop-agent review](docs/desktop-agent-review.md), [product opportunity reports](docs/product-ideas/), [capability roadmap](docs/roadmap.md), [threat model](docs/threat-model.md), [CLI guide](docs/cli.md), and [bridge protocol](docs/apex-bridge-v1.md).
+The project also includes a source-backed [agent landscape review](docs/agent-landscape.md), [desktop-agent review](docs/desktop-agent-review.md), [product opportunity reports](docs/product-ideas/), [capability-gap register](docs/capability-gap-register.md), [cloud provider compatibility review](docs/cloud-provider-compatibility-review.md), [capability roadmap](docs/roadmap.md), [threat model](docs/threat-model.md), [CLI guide](docs/cli.md), and [bridge protocol](docs/apex-bridge-v1.md).
 
 ## Not production-complete yet
 
-Do not use this first cut as an unattended production computer operator. It does not yet provide a native desktop installer, general browser/mouse/keyboard control, restart-safe recurring schedule/webhook worker, complete typed approval/pause/resume for external effects, full append-only effect ledger, cancellation across in-flight side effects, provider failover/capability negotiation, native integrations for named agent products, or an OS/container-isolated execution worker. The browser UI and local CLI do not magically turn an ordinary host into a sandbox. Self-host authentication beyond the Manus OAuth starter also remains to be delivered.
+Do not use this first cut as an unattended production computer operator. An Electron desktop shell and Linux AppImage have been built; the AppImage smoke-opened under Xvfb through the native workspace chooser and main window, but is unsigned, not tested on a real user machine, and not a published release. Windows/macOS targets have not been built or tested here. The local dashboard has clearly labeled work areas. **Create Game**, **Create Video**, browser/computer control, general web research, durable local automations, local MCP/app integrations, richer memory, a complete effect ledger, cancellation across side effects, provider failover/capability negotiation, and OS/container isolation remain unimplemented or incomplete. A section tab is not proof that its feature works. The desktop and CLI do not magically turn an ordinary host into a sandbox. Self-host authentication beyond the Manus OAuth starter also remains to be delivered.
 
 Muse is Meta's personal agent; OpenAI's announced always-on agent is Dots. The product pages reviewed do not document a stable third-party control API for either, and APEX does not claim a direct integration. APEX Bridge v1 works only with a peer that implements [the published contract](docs/apex-bridge-v1.md).
 
 ## Start the local agent (no API key)
 
-The local CLI works without the hosted APEX server or database. From an APEX source checkout, install dependencies and launch the guided setup:
+The local CLI and desktop workbench run without the hosted APEX server or database. From an APEX source checkout, install dependencies and launch the guided setup:
 
 ```bash
 pnpm install --frozen-lockfile
@@ -39,15 +40,21 @@ pnpm cli skills starter interview-practice-coach
 pnpm cli local --cwd ./your-project "Summarize this project"
 ```
 
-APEX checks for Ollama on this computer. If it is missing, setup prints the official download page and asks you to install it; APEX does not silently install software. Setup uses a compatible model already installed when possible, or offers `qwen3.5:4b` and asks before pulling it. The model download is roughly 3.3–4.0 GB. Local model requests go to Ollama on this computer; no provider API key or hosted APEX account is needed. This sets up the local CLI only: it does not start a local dashboard or daemon. A published npm package and native desktop installer are not available yet, so these commands currently run from the source checkout.
+APEX checks for Ollama on this computer. If it is missing, setup prints the official download page and asks you to install it; APEX does not silently install software. Setup uses a compatible model already installed when possible, or offers `qwen3.5:4b` and asks before pulling it. The model download is roughly 3.3–4.0 GB. Local model requests go to Ollama on this computer; no provider API key or hosted APEX account is needed. A published npm package is not available yet, so these commands run from the source checkout.
 
 Local file tools stay inside `--cwd` (or the current directory), exclude common secret/dependency/build paths, and reject symlinks. File writes require confirmation by default. Shell is disabled unless you add `--allow-shell`; every exact command still needs approval and runs with the current OS user's permissions. This is a confirmation guardrail, not a sandbox. Do not enable shell on an untrusted repository.
 
 The optional built-in Interview Practice Coach Skill helps with mock interviews and truthful feedback grounded in the user's own experience. It does not provide covert live answers, candidate impersonation, or fabricated credentials.
 
+### Open the local dashboard or desktop
+
+After configuring a model, start the loopback-only dashboard daemon with `pnpm cli dashboard`; open the printed `http://127.0.0.1:…/local` URL. It is single-user and local to this machine, not an OS sandbox. Or start the Electron app with `pnpm desktop:dev`, which opens a native workspace-folder chooser. The desktop rail includes **Agent**, **Code & Files**, **Create Game**, **Create Video**, **Browser & Computer**, **Research**, **Automations**, **Skills**, **Integrations**, **Models**, **Run History**, **Memory & Knowledge**, and **Assets & Files**. Each section shows whether it is available, limited, CLI-only, hosted-only, or planned; planned sections are informational and do not start fake work.
+
+On Linux, build a portable AppImage with `pnpm desktop:linux`; the current unsigned artifact is written to `dist/installers/`. Windows and macOS build targets are configured for their respective operating systems. A multi-OS GitHub Actions workflow uploads build artifacts but does not publish a release. No signed/notarized public download is available yet.
+
 ## Run the dashboard and API
 
-The full workbench requires Node.js 22, pnpm 10.18, and a MySQL-compatible database. It currently uses the Manus OAuth/session starter by default; standalone hosted authentication remains incomplete.
+The optional hosted workbench requires Node.js 22, pnpm 10.18, and a MySQL-compatible database. It currently uses the Manus OAuth/session starter by default; standalone hosted authentication remains incomplete. This is separate from `pnpm cli dashboard`, which uses the local daemon and no database.
 
 ```bash
 cp .env.example .env
@@ -79,6 +86,7 @@ pnpm cli status
 pnpm cli run "Review this task"
 pnpm cli chat
 pnpm cli history
+pnpm cli dashboard
 ```
 
 Create a personal token in **CLI** in the dashboard. Enter it at the terminal's hidden prompt, never as a shell argument. The server stores only a SHA-256 hash; the token is shown once. Remote runs share the web agent engine and owner-scoped data.
@@ -123,13 +131,16 @@ Migrations live in `drizzle/`. `pnpm db:migrate` applies checked-in migrations; 
 
 ## Project structure
 
-- `client/` — authenticated APEX workbench and public docs.
+- `client/` — authenticated hosted workbench, public Preview, and the local Agent/work-area dashboard.
 - `server/agent/` — APEX run loop, native tools, memory/workspace, Skills, API Plugins, tokens, and workflows.
 - `server/providers/` — user-selected model profiles, compatible chat API, encryption, and endpoint safety.
 - `server/bridges/` — optional authenticated APEX Bridge v1 service.
-- `bin/apex.mjs` — terminal client for remote APEX runs and explicit local project work.
+- `bin/apex.mjs` — CLI, Ollama onboarding, local Skills, and the callable local agent loop.
+- `bin/apex-dashboard.mjs` — loopback-only local API/dashboard daemon, encrypted local model config, runs, and file approvals.
+- `desktop/` — Electron shell, native workspace chooser, app icon, and local BrowserWindow policy.
+- `.github/workflows/desktop-build.yml` — separate Linux/Windows/macOS build jobs that upload unsigned artifacts only.
 - `drizzle/` — MySQL schema and additive migrations.
-- `docs/` — product research, opportunities, roadmap, threat model, CLI, and bridge protocol.
+- `docs/` — product research, capability gaps, roadmap, threat model, CLI, and bridge protocol.
 
 ## Open-source governance
 

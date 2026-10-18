@@ -2,13 +2,22 @@
   "name": "apex-agent",
   "version": "1.0.0",
   "license": "MIT",
+  "description": "APEX — an open-source local-first AI agent workstation",
+  "desktopName": "apex-agent",
   "type": "module",
+  "main": "desktop/main.mjs",
   "bin": {
     "apex": "./bin/apex.mjs"
   },
   "scripts": {
     "dev": "NODE_ENV=development tsx watch server/_core/index.ts",
     "cli": "node bin/apex.mjs",
+    "desktop": "electron .",
+    "desktop:dev": "pnpm build && electron .",
+    "desktop:pack": "pnpm build && electron-builder --dir",
+    "desktop:linux": "pnpm build && electron-builder --linux AppImage",
+    "desktop:win": "pnpm build && electron-builder --win nsis",
+    "desktop:mac": "pnpm build && electron-builder --mac dmg zip",
     "hash-password": "node bin/hash-password.mjs",
     "build": "vite build && esbuild server/_core/index.ts --platform=node --packages=external --bundle --format=esm --outdir=dist",
     "start": "NODE_ENV=production node dist/index.js",
@@ -19,6 +28,52 @@
     "db:migrate": "drizzle-kit migrate",
     "dev:static": "vite --host 0.0.0.0 --port ${PORT:-3000} --strictPort",
     "build:static": "vite build"
+  },
+  "build": {
+    "appId": "org.apex.agent",
+    "productName": "APEX",
+    "asar": true,
+    "files": [
+      "bin/**",
+      "desktop/**",
+      "dist/public/**",
+      "LICENSE",
+      "package.json",
+      "!**/*.test.*"
+    ],
+    "directories": {
+      "output": "dist/installers"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "desktop/icons",
+      "category": "Utility",
+      "syncDesktopName": true,
+      "artifactName": "APEX-${version}-linux-${arch}.${ext}"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "desktop/icons/APEX.ico",
+      "artifactName": "APEX-${version}-windows-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "desktop/icons/APEX.icns",
+      "category": "public.app-category.productivity"
+    }
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.693.0",
@@ -99,6 +154,8 @@
     "add": "^2.0.6",
     "autoprefixer": "^10.4.20",
     "drizzle-kit": "^0.31.4",
+    "electron": "^44.9.0",
+    "electron-builder": "^26.15.3",
     "esbuild": "^0.25.0",
     "pnpm": "10.18.0",
     "postcss": "^8.4.47",

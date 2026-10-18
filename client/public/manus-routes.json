@@ -1,1 +1,1 @@
-{"routes":[{"path":"/","title":"APEX Workbench"},{"path":"/preview","title":"APEX Preview"}]}
+{"routes":[{"path":"/","title":"APEX Workbench"},{"path":"/preview","title":"APEX Preview"},{"path":"/local","title":"APEX Local Workstation"}]}

@@ -7,3 +7,4 @@ overrides:
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - esbuild
+  - electron

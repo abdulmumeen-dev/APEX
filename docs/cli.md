@@ -1,6 +1,6 @@
 # APEX CLI
 
-The CLI is a client of the APEX agent, not a separate chat simulation. **Local mode** runs APEX on the computer where the CLI is invoked, can use Ollama without an API key or hosted APEX server, and can operate on an explicitly chosen project directory. **Remote mode** calls the authenticated APEX server and shares its actual provider, policy, Skills, memory, workflow records, and run history.
+The CLI is a client of the APEX agent, not a separate chat simulation. **Local CLI and dashboard** use the same callable local task loop, with an explicitly chosen project directory and no hosted APEX account or managed database. **Remote mode** calls the optional authenticated hosted APEX server and shares its provider, policy, Skills, memory, workflow records, and run history; the hosted server loop remains separate from standalone local mode.
 
 ## From a source checkout
 
@@ -12,7 +12,7 @@ pnpm cli help
 pnpm cli setup
 ```
 
-`pnpm cli setup` checks for Ollama on this computer. If Ollama is missing, it prints the official download page and tells you to install and open Ollama; it does not install software itself. If a compatible model is already installed it uses that model; otherwise it recommends `qwen3.5:4b`, explains the approximate 3.3–4.0 GB download, and asks before running `ollama pull`. Local setup needs no APEX server, provider account, or API key. This project has a CLI entry point but does not yet publish a versioned npm package or native desktop installer.
+`pnpm cli setup` checks for Ollama on this computer. If Ollama is missing, it prints the official download page and tells you to install and open Ollama; it does not install software itself. If a compatible model is already installed it uses that model; otherwise it recommends `qwen3.5:4b`, explains the approximate 3.3–4.0 GB download, and asks before running `ollama pull`. Local setup needs no APEX server, provider account, or API key. A versioned npm package and signed public desktop release are not available yet; the Linux AppImage has been generated and smoke-opened under Xvfb through its native workspace chooser and main window, but it has not been installed or tested on a real user's computer.
 
 ### Remote server mode
 
@@ -61,6 +61,26 @@ The built-in **Interview Practice Coach** is an optional Markdown Skill. Install
 - These checks are not an OS sandbox. There is no isolated container, VM, seccomp profile, or separate low-privilege worker in this release. Do not process untrusted repositories or hostile model instructions with shell enabled. Do not place API keys/secrets in the selected project's environment.
 - The selected model server must be reachable from the CLI machine; a hosted APEX Preview cannot reach the user's desktop `localhost`.
 
+### Standalone local dashboard and desktop
+
+Start the loopback-only local dashboard from the source checkout:
+
+```bash
+pnpm cli dashboard --cwd ./my-project
+```
+
+The default listener is `127.0.0.1:8765`; open the printed `/local` URL on the same computer. `--cwd` selects the project root, and `--port 0` asks the OS for an available port. The daemon validates Host and same-origin requests, has no permissive CORS, and does not enable browser shell execution. It stores recent runs locally with owner-only permissions. A loopback listener is not an OS sandbox; local file access runs with the current OS user's permissions and stays within APEX's selected project tools.
+
+The Electron app opens a native folder chooser and starts that same local daemon:
+
+```bash
+pnpm desktop:dev
+```
+
+The local rail distinguishes **Agent**, **Code & Files**, **Create Game**, **Create Video**, **Browser & Computer**, **Research**, **Automations**, **Skills**, **Integrations**, **Models**, **Run History**, **Memory & Knowledge**, and **Assets & Files**. Each area has a status. Game/video generation, local browser/computer control, general web research, durable local scheduling, and broad local connectors are still planned, not active tools. The local dashboard's model-list test does not prove that an endpoint supports APEX tool calls.
+
+On Linux, build an unsigned portable AppImage with `pnpm desktop:linux`; it is written under `dist/installers/`. The generated artifact has only had a limited Xvfb startup smoke; it still needs real-device installation and user-flow validation. `pnpm desktop:win` and `pnpm desktop:mac` are configured for their respective operating systems and must be built and tested on those OS runners. The checked-in GitHub Actions workflow uploads build artifacts only; it does not create or publish a GitHub Release. Platform signing/notarization and public downloads remain release work.
+
 ## API routes used by remote mode
 
 The CLI uses the same personal-token-protected REST API as other terminal tools:
@@ -75,4 +95,4 @@ API requests are not a general administrative token. The current token is owner-
 
 ## Current limits
 
-Remote execution depends on an operator-configured compatible provider; there is no default hosted model. Current local mode is a command-line client, not a full-screen TUI or published desktop application. General browser/mouse/keyboard control, streaming, interrupt propagation through every model/tool side effect, durable scheduled jobs, OS-level sandboxing, self-host authentication independent of Manus OAuth, and signed extension bundles remain roadmap items.
+Remote execution depends on an operator-configured compatible provider; there is no default hosted model. Local CLI/dashboard and the Electron shell are usable from a source checkout; the Linux AppImage has been smoke-opened under Xvfb but is unsigned and unpublished, and Windows/macOS artifacts are not built here. A full-screen TUI, general browser/mouse/keyboard control, game/video creation, general web research, local scheduled jobs, local Skill UI, broad local integrations, streaming, interrupt propagation through every model/tool side effect, OS-level sandboxing, self-host authentication independent of Manus OAuth, and signed extension bundles remain roadmap items.
